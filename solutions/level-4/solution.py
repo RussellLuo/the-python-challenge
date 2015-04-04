@@ -19,23 +19,25 @@ def request(url):
 
 
 def answer(first):
-    content = request(BASE_URL + first)
+    pattern = re.compile(r'(\d+)$')
+
+    next = first
     for i in xrange(0, 401):
+        content = request(BASE_URL + next)
         print(content)
-        m = re.search(r'([0-9]+)$', content)
+
+        m = pattern.search(content)
         if m:
-            next = m.groups()[0]
+            next = m.group(1)
         else:
             cmd = raw_input('> ')
             if cmd == 'quit':
                 break
             next = cmd
-        content = request(BASE_URL + next)
 
 
 if __name__ == '__main__':
     content = request('http://www.pythonchallenge.com/pc/def/linkedlist.php')
     m = re.search(r'nothing=([0-9]+)', content)
-    first = m.groups()[0]
-    result = answer(first)
-    print(result)
+    first = m.group(1)
+    answer(first)
